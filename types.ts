@@ -1,20 +1,19 @@
 import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 
-
 export interface MyJwtPayload extends JwtPayload {
-    id: string;
+  id: string;
 }
 
-export interface OperationalError extends Error{
-    status: number;
-    isOperational: boolean;
+export interface OperationalError extends Error {
+  status: number;
+  isOperational: boolean;
 }
 
 interface BirthDay {
   day: number;
   month: number;
-  year: number
+  year: number;
 }
 
 interface Address {
@@ -44,4 +43,3 @@ export interface DbUser {
 export interface IGotAuthUser extends Request {
   user: DbUser;
 }
-

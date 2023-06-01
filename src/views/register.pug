@@ -1,25 +1,81 @@
 extends layout.pug 
 
-append styles 
-  link(href='assets/css/login.css' rel='stylesheet')
+append styles
+  link(href='assets/css/registration.css' rel='stylesheet')
 
 
 block content
-  main
-    .login-block
-      h1 Log into your account
-      form#login-form(action='#')
-        .form-group
-          .input-group
-            span.input-group-addon
-              i.fa.fa-user.ti-user
-            input.form-control(type='email' placeholder='Your email address' required)
-        hr.hr-xs
-        .form-group
-          .input-group
-            span.input-group-addon
-              i.fa.fa-lock.ti-unlock
-            input.form-control(type='password' placeholder='Your password', required)
-        hr.hr-xs
-        a.forgot-link(href='#') Forgot Password?
-        button.btn.btn-secondary.btn-lg.btn-block Log in
+  main.container
+    header Registration Form
+    form#registration-form.form(action='#')
+      .input-namesmain-container
+        label(for='') Legal names
+        .input-names
+          .input-box
+            input(type='text' placeholder='Enter first name' required='')
+          .input-box
+            input(type='text' placeholder='Enter middle name')
+          .input-box
+            input(type='text' placeholder='Enter last name' required='')
+      .column
+        .input-box
+          label Phone Number
+          input(type='number' placeholder='Enter phone number' required='')
+        .input-box
+          label Birth Date
+          input(type='date' placeholder='Enter birth date' required='')
+      .gender-box
+        h3 Sex
+        .gender-option
+          .gender
+            input#check-male(type='radio' name='gender' checked='')
+            label(for='check-male') male
+          .gender
+            input#check-female(type='radio' name='gender')
+            label(for='check-female') Female
+      .input-box.address
+        label Current Address
+        input(type='text' placeholder='Enter street address' required='')
+        input(type='text' placeholder='Enter street address line 2' required='')
+        .column
+          .select-box
+            select
+              option(hidden='') Country
+              option America
+              option Japan
+              option India
+              option Nepal
+          input(type='text' placeholder='Enter your city' required='')
+        .column
+          input(type='text' placeholder='Enter your region' required='')
+          input(type='number' placeholder='Enter postal code' required='')
+      .input-box.address
+        label Previous Address
+        h6
+          | NOTE: Only required if you haven't lived in your current address for up to five years
+        input(type='text' placeholder='Enter street address' required='')
+        input(type='text' placeholder='Enter street address line 2' required='')
+        .column
+          .select-box
+            select
+              option(hidden='') Country
+              option America
+              option Japan
+              option India
+              option Nepal
+          input(type='text' placeholder='Enter your city' required='')
+        .column
+          input(type='text' placeholder='Enter your region' required='')
+          input(type='number' placeholder='Enter postal code' required='')
+      .input-box
+        label Email Address
+        input(type='text' placeholder='Enter email address' required='')
+      .input-box
+        label password
+        input(type='password' placeholder='*********' required='')
+      .input-box
+        label confirm password
+        input(type='password' placeholder='*********' required='')
+      button(type='Submit') Submit
+
+

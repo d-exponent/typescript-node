@@ -1,4 +1,3 @@
-
 class AppError extends Error {
   status: number;
   isOperational: boolean;

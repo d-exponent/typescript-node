@@ -1,7 +1,6 @@
 import bycrypt from 'bcryptjs';
 import { Schema, model } from 'mongoose';
-import {  DbUser } from '../../types';
-
+import { DbUser } from '../../types';
 
 const validateEmail = (email: string): boolean => {
   const validEmailReg =
@@ -14,109 +13,109 @@ const capitalize = (str: string): string => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
 
+const userSchema = new Schema<DbUser>(
+  {
+    firstName: {
+      type: String,
+      required: [true, 'User must have a first name']
+    },
+    middleName: String,
+    lastName: {
+      type: String,
+      required: [true, 'User must have a last name']
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      required: [true, 'user must have an email addresss'],
+      validate: [validateEmail, 'Please provide a valid email address']
+    },
+    password: {
+      required: [true, 'user must have a password'],
+      type: String,
+      minlength: 8,
+      select: false
+    },
+    birthDay: {
+      day: {
+        type: Number,
+        required: [true, 'User must provide the day of birth'],
+        min: 1,
+        max: 31
+      },
+      month: {
+        type: Number,
+        required: [true, 'User must provide the month of birth'],
+        min: 1,
+        max: 12
+      },
+      year: {
+        type: Number,
+        required: [true, 'User must provide the year of birth'],
+        min: 1963,
+        max: new Date().getFullYear()
+      }
+    },
+    currentAddress: {
+      addressLineOne: {
+        type: String,
+        required: [true, 'Please provide the primary residence']
+      },
+      addressLineTwo: String,
+      town: {
+        type: String,
+        required: [true, 'Provide the town']
+      },
+      county: {
+        type: String,
+        required: [true, 'Provide the county']
+      },
+      postcode: {
+        type: String,
+        required: [true, 'Provide the postcode']
+      }
+    },
+    previousAddress: {
+      addressLineOne: {
+        type: String
+      },
+      addressLineTwo: String,
+      town: {
+        type: String
+      },
+      county: {
+        type: String
+      },
+      postcode: {
+        type: String
+      }
+    },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user'
+    },
+    active: {
+      type: Boolean,
+      default: true
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    }
+  },
+  {
+    methods: {
+      async hashPassword(plainPassword: string): Promise<void> {
+        this.password = await bycrypt.hash(plainPassword, 11);
+      },
 
-
-const userSchema = new Schema<DbUser>({
-  firstName: {
-    type: String,
-    required: [true, 'User must have a first name']
-  },
-  middleName: String,
-  lastName: {
-    type: String,
-    required: [true, 'User must have a last name']
-  },
-  email: {
-    type: String,
-    lowercase: true,
-    required: [true, 'user must have an email addresss'],
-    validate: [validateEmail, 'Please provide a valid email address']
-  },
-  password: {
-    required: [true, 'user must have a password'],
-    type: String,
-    minlength: 8,
-    select: false
-  },
-  birthDay: { 
-    day: {
-      type: Number,
-      required: [true, 'User must provide the day of birth'],
-      min: 1,
-      max: 31
-    }, 
-    month: {
-      type: Number,
-      required: [true, 'User must provide the month of birth'],
-      min: 1,
-      max: 12
-    }, 
-    year: {
-      type: Number,
-      required: [true, 'User must provide the year of birth'],
-      min: 1963,
-      max: new Date().getFullYear()
-    },
-  },
-  currentAddress: {
-    addressLineOne: {
-      type: String,
-      required: [true, 'Please provide the primary residence']
-    },
-    addressLineTwo: String,
-    town: {
-      type: String,
-      required: [true, 'Provide the town']
-    },
-    county: {
-      type: String,
-      required: [true, 'Provide the county']
-    },
-    postcode: {
-      type: String,
-      required: [true, 'Provide the postcode']
-    },
-  },
-  previousAddress: {
-    addressLineOne: {
-      type: String,
-    },
-    addressLineTwo: String,
-    town: {
-      type: String,
-    },
-    county: {
-      type: String,
-    },
-    postcode: {
-      type: String,
-    },
-  },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
-  active: {
-    type: Boolean,
-    default: true
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now()
+      async validatePassword(plainPassword: string): Promise<boolean> {
+        return await bycrypt.compare(plainPassword, this.password);
+      }
+    }
   }
-});
-
-
-userSchema.methods.hashPassword = async function (plainPassword: string): Promise<void> {
-  this.password = await bycrypt.hash(plainPassword, 11);
-};
-
-userSchema.methods.validatePassword = async function (
-  plainPassword: string
-): Promise<boolean> {
-  return await bycrypt.compare(plainPassword, this.password);
-};
+);
 
 userSchema.pre('save', async function (next) {
   this.firstName = capitalize(this.firstName);

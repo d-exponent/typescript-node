@@ -1,16 +1,21 @@
 {
-  "name": "secret-shopper",
+  "name": "node-typescript",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "npx tsc",
-    "build-client": "browserify ./dist/src/public/assets/js/main.js -o ./dist/src/public/assets/js/bundle.js",
-    "watch-client": "watchify ./dist/src/public/assets/js/main.js -o ./dist/src/public/assets/js/bundle.js",
-    "start": "NODE_ENV=production node dist/server.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
-    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "build": "rimraf dist && tsc",
+    "start": "node index.ts",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist",
+    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
+    "prettier": "prettier --config .prettierrc ./**/*.ts --write"
   },
+  "pre-commit": [
+      "ts.check",
+      "build",
+      "add-build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,11 +25,12 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "express-fileupload": "^1.4.0",
     "express-mongo-sanitize": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.2.0",
-    "pug": "^3.0.2"
+    "pre-commit": "^1.2.2",
+    "pug": "^3.0.2",
+    "rimraf": "^5.0.1"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
@@ -38,8 +44,6 @@
     "concurrently": "^8.0.1",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8",
-    "typescript": "^5.0.4",
-    "watchify": "^4.0.0",
-    "win-node-env": "^0.6.1"
+    "typescript": "^5.1.3"
   }
 }
